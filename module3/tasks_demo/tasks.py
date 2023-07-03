@@ -47,10 +47,14 @@ class Task:
 
         self.__start_time = None
 
+    def get_id(self):
+        return self.__id
 
+    def get_design(self):
+        return self.__design       
 
     def __str__(self):
-        return str(self.__id) + ' - ' + self.__design + ' - ' + str(self.__conclusion) \
+        return str(self.get_id()) + ' - ' + self.get_design() + ' - ' + str(self.__conclusion) \
         +' - ' + str(self.__categories) \
             + ' - ' + str(self.__priority) + ' - ' + str(self.__completed) + ' - ' + str(self.__elapsed_time)
     
@@ -67,29 +71,62 @@ class Task:
         
         if self.isClockRunning(): self.stop()
         self.__completed = True
+
+class TaskList:
+    def __init__(self):
+        self.__tasks = []
     
+    def create_task(self, task):
+        self.__tasks.append(task)
+    
+    def on_going_tasks(self):
+        on_going = []
+        for task in self.__tasks:
+            if not task.isCompleted():
+                on_going.append(task)
+        return on_going
+    
+    def completed_tasks(self):
+        completed = []
+        for task in self.__tasks:
+            if task.isCompleted():
+                completed.append(task)
+        return completed
+
+    def retrieve_task(self, id):
+        for task in self.__tasks:
+            if task.get_id() == id:
+                return task
+        return None
+
         
 if __name__ == '__main__':
     import time
     import traceback
 
+    my_tasks = TaskList()
+
     aTask = Task('My first task')
-    otherTask = Task('Nothing to do...')
-    print('a Task:', aTask)
-    print('a Task:', otherTask)
+    my_tasks.create_task(aTask)
+    
+    aTask = Task('Nothing to do...')
+    my_tasks.create_task(aTask)
 
-    time.sleep(2)
-    try:
-        aTask.start()
-    except TaskError:
-        print('Task error!!!:', traceback.format_exc(), sep='\n')
+    for task in my_tasks.on_going_tasks():
+        print(task)
 
-    aTask.stop()
-    time.sleep(3)
-    aTask.start()
+    # time.sleep(2)
+    # try:
+    #     aTask.start()
+    # except TaskError:
+    #     print('Task error!!!:', traceback.format_exc(), sep='\n')
 
-    aTask.complete()
-    otherTask.complete()
-    print('a Task:', aTask)
-    print('a Task:', otherTask)
+    # aTask.stop()
+    # time.sleep(3)
+    # aTask.start()
+
+    # aTask.complete()
+    # otherTask.complete()
+    # print('a Task:', aTask)
+    # print('a Task:', otherTask)
 
