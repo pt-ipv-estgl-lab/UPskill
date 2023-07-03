@@ -3,7 +3,9 @@ Managment of my tasks
 '''
 from datetime import datetime
 from enum import Enum
-import time
+
+class TaskError(RuntimeWarning):
+    pass
 
 class Priority(Enum):
     LOW = 0
@@ -21,8 +23,9 @@ class Task:
         
         #datetime(int(datetime.year), int(datetime.month), int(datetime.day),hour=23,minute=59)
         self.__start_time = None
-        self.__elapsed_time = None       
-        self.start()
+        self.__elapsed_time = 0.0
+
+        self.start() # beginning count of elapsed time 
 
         self.__categories = []
         self.__priority = Priority.NORMAL
@@ -31,15 +34,16 @@ class Task:
     
 
     def start(self):
+        if self.__start_time != None:
+            raise TaskError('Error: clock is already running')
+         
         self.__start_time = datetime.now()
-        #print(self.__start_time)
-
+        
     def stop(self):
         if self.__start_time is None:
-            print("Task not started yet.")
-            return
+            raise TaskError('Error: clock not started')
         
-        self.__elapsed_time = datetime.now() - self.__start_time
+        self.__elapsed_time += (datetime.now() - self.__start_time).total_seconds()
 
         self.__start_time = None
 
@@ -51,23 +55,39 @@ class Task:
             + ' - ' + str(self.__priority) + ' - ' + str(self.__completed) + ' - ' + str(self.__elapsed_time)
     
    
-
+    def isClockRunning(self):
+        return self.__start_time != None
 
     def isCompleted(self):
         return self.__completed
     
     def complete(self):
+        if self.isCompleted():
+            raise TaskError('Error: Task already completed')
+        
+        if self.isClockRunning(): self.stop()
         self.__completed = True
-        self.stop()
     
         
 if __name__ == '__main__':
-    aTask = Task('Nothing')
+    import time
+    import traceback
+
+    aTask = Task('My first task')
     otherTask = Task('Nothing to do...')
     print('a Task:', aTask)
     print('a Task:', otherTask)
 
-    time.sleep(4)
+    time.sleep(2)
+    try:
+        aTask.start()
+    except TaskError:
+        print('Task error!!!:', traceback.format_exc(), sep='\n')
+
+    aTask.stop()
+    time.sleep(3)
+    aTask.start()
+
     aTask.complete()
     otherTask.complete()
     print('a Task:', aTask)
