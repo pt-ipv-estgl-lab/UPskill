@@ -103,30 +103,53 @@ class TaskList:
 if __name__ == '__main__':
     import time
     import traceback
+    # from random import randrange # utilizar a função para obter um inteiro aleatório
+    import random
 
-    my_tasks = TaskList()
+    my_tasks = TaskList() # create an empty task list 
 
-    aTask = Task('My first task')
+    aTask = Task('My first task') # create a 1st task and add to task list 
     my_tasks.create_task(aTask)
     
-    aTask = Task('Nothing to do...')
+    aTask = Task('My second task') # create a 2nd task and add to task list
     my_tasks.create_task(aTask)
+
+    aTask = Task('My third task ') # create a 3rd task and add to task list
+    my_tasks.create_task(aTask)
+
+    del aTask                      # undefine name (variable)
 
     for task in my_tasks.on_going_tasks():
         print(task)
 
-    # time.sleep(2)
-    # try:
-    #     aTask.start()
-    # except TaskError:
-    #     print('Task error!!!:', traceback.format_exc(), sep='\n')
+    time.sleep(random.randint(0,5)) # random value between 0 and 5 seconds
+    try:
+        aTask = my_tasks.retrieve_task(1) # retrieve 1st task
+        aTask.start()
+    except TaskError:
+        print('Task error!!!:') # , traceback.format_exc(), sep='\n'
 
-    # aTask.stop()
-    # time.sleep(3)
-    # aTask.start()
+    aTask.stop()
+    time.sleep(random.randrange(0,5,2)) # random value from 0, 2, 4 range
+    aTask.start()
 
-    # aTask.complete()
-    # otherTask.complete()
-    # print('a Task:', aTask)
-    # print('a Task:', otherTask)
+    aTask.complete()
 
+    aTask = my_tasks.retrieve_task(2)
+    aTask.stop()
+
+    print('Ongoing tasks:')
+    for task in my_tasks.on_going_tasks():
+        print(task)
+
+    print('Completed tasks:')
+    for task in my_tasks.completed_tasks():
+        print(task)
+
+    time.sleep(random.randint(0,5)) # random value between 0 and 5 seconds
+    aTask = my_tasks.retrieve_task(3)
+    aTask.stop()
+
+    print('Ongoing tasks:')
+    for task in my_tasks.on_going_tasks():
+        print(task)
