@@ -20,7 +20,7 @@ class Category:
         self.set_name(name)
     
     def __str__(self):
-        return str(self.get_id()) + ' - '+ self.get_name()
+        return '(' + str(self.get_id()) + ' - '+ self.get_name() + ')'
     
     def get_id(self):
         return self.__id
