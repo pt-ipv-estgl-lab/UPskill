@@ -10,7 +10,7 @@ class Timestamp:
     def __init__(self, begin=None, end=None): # Constructor
         self.__begin = None
         self.__end = None
-        if begin == None: begin = datetime.now()
+        if begin == None: begin = datetime.now()  # is now default constructor is used
         self.set_begin(begin)
         self.set_end(end)
 
