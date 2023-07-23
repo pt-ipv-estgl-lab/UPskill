@@ -84,7 +84,7 @@ class Product:
     def get_loans(self):
         return self.__loans[:]
             
-    def __str__(self):                                  # textual representation of a timestamp
+    def __str__(self):         # textual representation of a product
         return str(self.get_id()) + " | " \
             + self.get_title() + " | " \
             + str(self.get_type()) + " | " \
