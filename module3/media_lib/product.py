@@ -136,5 +136,5 @@ if __name__ == '__main__': # for testing propose
     print(other_product, ':', sep='', end='')
     print(other_product.get_loans())
     other_product.create_loan('other loan')
-    print(other_product, ':', sep='', end='')
+    print(other_product, ': ', sep='', end='')
     print(other_product.get_loans())

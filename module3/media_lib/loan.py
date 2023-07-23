@@ -57,9 +57,7 @@ class Loan:
         return self.__end
 
     def __str__(self):      # textual representation of a loan
-        return self.get_product().__str__() + " | " \
-            + self.get_friend().__str__() + " | " \
-            + str(self.get_init()) + " -> " \
+        return str(self.get_init()) + " -> " \
             + str(self.get_end())
 
 
@@ -79,12 +77,11 @@ if __name__ == '__main__': # for testing propose
 
     a_product = Product()
     print(a_product)
-    print()
     a_loan = Loan(a_product, Friend('Teté'))
 #    a_product.create_loan(a_loan) # add the loan to products loans
         
     for loan in a_product.get_loans():
-        print(loan)
+        print('\t', loan, 'to', loan.get_friend())
     print()
 
     try:
@@ -96,23 +93,27 @@ if __name__ == '__main__': # for testing propose
     a_loan.set_end(datetime.now())
     a_product.give_back(a_loan)
 
+    print(a_product)
     for loan in a_product.get_loans():
-        print(loan)
+        print('\t', loan, 'to', loan.get_friend())
     print()
+
     from product import ProductType
     other_product = Product("Harry Potter and the Philosopher's Stone",
                             ProductType.BOOK,datetime(2022,10,1))
     other_friend = Friend('Juka','Joaquim Baia','juka@ipg.pt')
     other_loan = Loan(other_product, other_friend,
                       datetime.now(),datetime(2023,7,31))
+    print(other_product)
     for loan in other_product.get_loans():
-        print(loan)
+        print('\t', loan, 'to', loan.get_friend())
     print()
     time.sleep(random.randint(0,5)) # random value between 0 and 5 seconds
     other_loan.set_end(datetime.now())
     other_product.give_back(other_loan)
-
+    another_loan = Loan(other_product, Friend('Gui'))
+    print(other_product)
     for loan in other_product.get_loans():
-        print(loan)
+        print('\t', loan, 'to', loan.get_friend())
     print()
     
