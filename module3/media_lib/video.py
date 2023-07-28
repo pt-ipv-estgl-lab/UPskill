@@ -9,7 +9,9 @@ class VideoError(Exception): # Product Errors
 
 class Video(Product):
     # Constructor
-    def __init__(self, title='No title', type=ProductType.MOVIE, buy_date=None,
+    def __init__(self, title='No title', 
+                 type=ProductType.MOVIE, 
+                 buy_date=None,
                  length=None, starring=None):
         super().__init__(title,type, buy_date) # call constructor of super class
         self.set_length(length)

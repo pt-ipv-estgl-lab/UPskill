@@ -2,8 +2,9 @@
 Products managment
 
 '''
-from datetime import datetime
+
 from enum import Enum
+from datetime import datetime
 
 class ProductError(Exception): # Product Errors 
     pass
@@ -19,13 +20,15 @@ class ProductType(Enum):
 class Product:
     __id = 1
     # Constructor
-    def __init__(self, title='No title', type=ProductType.OTHER, buy_date=None):
+    def __init__(self, title='No title', 
+                 type=ProductType.OTHER, 
+                 buy_date=None):
         self.__id = Product.__id
         self.set_title(title)
         self.set_type(type)
         if buy_date == None: # if buy_date is None
             buy_date = datetime.today()  # buy_date is today
-        self.__purchase_date = buy_date    
+        self.set_buy_date(buy_date)    
         self.__borrowed = False
         self.__loans = []
         Product.__id+=1
@@ -43,7 +46,8 @@ class Product:
 
     def set_type(self, type):
         if not isinstance(type, ProductType):
-            raise ProductError("Error: type " + str(type) + " is not valid")
+            raise ProductError("Error: type " + 
+                               str(type) + " is not valid")
         self.__type = type
     
     def get_type(self):
@@ -100,7 +104,8 @@ if __name__ == '__main__': # for testing propose
     a_product = Product()
     print(a_product)
     other_product = Product('Python how to', 
-                            type=ProductType.BOOK,buy_date=datetime(2023,5,31))
+                            type=ProductType.BOOK,
+                            buy_date=datetime(2023,5,31))
     print(other_product)
 
     try:

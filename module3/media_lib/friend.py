@@ -71,7 +71,7 @@ if __name__ == '__main__': # for testing propose
         print(e)
 
     try:
-        my_friend.set_email("justina@estgl.ipv.pt") # test 3 if emaif is verified
+        my_friend.set_email("justina_12@estgl.ipv.pt") # test 3 if emaif is verified
         print(my_friend.get_email())
     except FriendError as e:
         print(e)
@@ -83,7 +83,7 @@ if __name__ == '__main__': # for testing propose
     except FriendError as e:
         print(e)
 
-    other_friend = Friend('blond','Antonina','antonina@outlook.com')
+    other_friend = Friend('blond','Antonina','antonina-1@outlook.com')
     print(other_friend.get_nickname())
     print(other_friend.get_name())
     print(other_friend.get_email())
