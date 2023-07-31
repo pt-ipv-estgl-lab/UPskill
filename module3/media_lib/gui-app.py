@@ -3,113 +3,103 @@ from tkinter import ttk
 from tkinter import Menu
 from tkinter import messagebox
 
-root = tk.Tk()
-root.title("Media Lib App")
+class MainWindow(tk.Tk):
+    def __init__(self, window_width = 640, window_height = 480, *args, **kargs):
+        super().__init__(*args, **kargs)
+        self.title("Media Lib App")
 
-window_width = 640
-window_height = 480
+        # find the center point
+        __screenwith = self.winfo_screenwidth()
+        __screenheight = self.winfo_screenheight()
 
-# get the screen dimension
-screen_width = root.winfo_screenwidth()
-#print('screen width:', screen_width)
-screen_height = root.winfo_screenheight()
-# print('screen height:', screen_height)
+        __center_x = int(__screenwith/2 - window_width / 2)
+        __center_y = int(__screenheight/2 - window_height / 2)
 
-# find the center point
-center_x = int(screen_width/2 - window_width / 2)
-center_y = int(screen_height/2 - window_height / 2)
+        # set the position of the window to the center of the screen
+        print(f'{window_width}x{window_height}+{__center_x}+{__center_y}')
+        self.geometry(f'{window_width}x{window_height}+{__center_x}+{__center_y}') # geometry configuration
+        # self.resizable(False,False)
+        self.iconbitmap('./assets/PV_logotipo_pequeno.ico') # change app icon
 
-# set the position of the window to the center of the screen
-root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
+        # self.attributes('-alpha', 0.9) # transparency
+        # create a menubar
+        __menubar = Menu(self)
 
-# root.attributes('-alpha', 0.8)~
+        # create a menu
+        __management_menu = Menu(__menubar, tearoff=0)
 
-def friend_window():
-    # Create secondary (or popup) window.
-    global center_x
-    global center_y
+        # add menu items to the management menu
+        __management_menu.add_command(label='Products')
+        __management_menu.add_command(label='Friends')
 
-    window = tk.Toplevel()
-    window.title('Friend')
-    window.geometry(f'300x200+{center_x}+{center_y}')
-    # configure the grid
-    window.columnconfigure(0, weight=1)
-    window.columnconfigure(1, weight=3)
-    # nickname
-    nickname_label = ttk.Label(window, text="Nickname:")
-    nickname_label.grid(column=0, row=0, sticky=tk.E, padx=5, pady=5)
+        # # management_menu.add_separator()
 
-    nickname_entry = ttk.Entry(window)
-    nickname_entry.grid(column=1, row=0, sticky=tk.W, padx=5, pady=5)
+        # add the Management menu to the menubar
+        __menubar.add_cascade(
+            label="Managment",
+            menu=__management_menu
+        )
 
-    # name
-    name_label = ttk.Label(window, text="Name:")
-    name_label.grid(column=0, row=1, sticky=tk.E, padx=5, pady=5)
+        __loan_menu = Menu(__menubar, tearoff=0)
+        __loan_menu.add_command(label='New')
+        __menubar.add_cascade(label='Loans', menu=__loan_menu)
 
-    name_entry = ttk.Entry(window)
-    name_entry.grid(column=1, row=1, sticky=tk.W, padx=5, pady=5)
+        __report_menu = Menu(__menubar, tearoff=0)
+        __menubar.add_cascade(label='Repors', menu=__report_menu)
 
-    # email
-    email_label = ttk.Label(window, text="Email:")
-    email_label.grid(column=0, row=2, sticky=tk.E, padx=5, pady=5)
+        # add Exit menu item
+        __menubar.add_command(
+            label='Exit',
+            command=self.destroy
+        )
+        self.config(menu=__menubar)
 
-    email_entry = ttk.Entry(window)
-    email_entry.grid(column=1, row=2, sticky=tk.W, padx=5, pady=5)
+    # def friend_window():
+    #     # Create secondary (or popup) window.
+    #     global center_x
+    #     global center_y
 
-    # save button
-    save_button = ttk.Button(window, text="Save")
-    save_button.grid(column=0, row=3, sticky=tk.SW, padx=5, pady=5)
+    #     window = tk.Toplevel()
+    #     window.title('Friend')
+    #     window.geometry(f'300x200+{center_x}+{center_y}')
+    #     # configure the grid
+    #     window.columnconfigure(0, weight=1)
+    #     window.columnconfigure(1, weight=3)
+    #     # nickname
+    #     nickname_label = ttk.Label(window, text="Nickname:")
+    #     nickname_label.grid(column=0, row=0, sticky=tk.E, padx=5, pady=5)
 
-    # cancel button
-    cancel_button = ttk.Button(window, text="Cancel", command=window.destroy)
-    cancel_button.grid(column=1, row=3, sticky=tk.SE, padx=5, pady=5)
-    window.focus()
-    window.grab_set() # Modal.
+    #     nickname_entry = ttk.Entry(window)
+    #     nickname_entry.grid(column=1, row=0, sticky=tk.W, padx=5, pady=5)
+
+    #     # name
+    #     name_label = ttk.Label(window, text="Name:")
+    #     name_label.grid(column=0, row=1, sticky=tk.E, padx=5, pady=5)
+
+    #     name_entry = ttk.Entry(window)
+    #     name_entry.grid(column=1, row=1, sticky=tk.W, padx=5, pady=5)
+
+    #     # email
+    #     email_label = ttk.Label(window, text="Email:")
+    #     email_label.grid(column=0, row=2, sticky=tk.E, padx=5, pady=5)
+
+    #     email_entry = ttk.Entry(window)
+    #     email_entry.grid(column=1, row=2, sticky=tk.W, padx=5, pady=5)
+
+    #     # save button
+    #     save_button = ttk.Button(window, text="Save")
+    #     save_button.grid(column=0, row=3, sticky=tk.SW, padx=5, pady=5)
+
+    #     # cancel button
+    #     cancel_button = ttk.Button(window, text="Cancel", command=window.destroy)
+    #     cancel_button.grid(column=1, row=3, sticky=tk.SE, padx=5, pady=5)
+    #     window.focus()
+    #     window.grab_set() # Modal.
 
 
-def menu_about():
-    messagebox.showinfo('About', 'Demo on Upskill course')
+    # def menu_about():
+    #     messagebox.showinfo('About', 'Demo on Upskill course')
 
-# create a menubar
-menubar = Menu(root)
 
-# create a menu
-management_menu = Menu(menubar, tearoff=0)
-
-# add menu items to the management menu
-management_menu.add_command(label='Products')
-
-# add the submenu to friends
-friends_submenu = Menu(management_menu, tearoff=False)
-friends_submenu.add_command(label='Create', command=friend_window)
-friends_submenu.add_command(label='Retrieve')
-friends_submenu.add_command(label='Update')
-friends_submenu.add_command(label='Delete')
-management_menu.add_cascade(label='Friends', menu=friends_submenu)
-
-# management_menu.add_separator()
-
-# add the Management menu to the menubar
-menubar.add_cascade(
-    label="Managment",
-    menu=management_menu
-)
-
-loan_menu = Menu(menubar, tearoff=0)
-loan_menu.add_command(label='New')
-menubar.add_cascade(label='Loans', menu=loan_menu)
-
-list_menu = Menu(menubar, tearoff=0)
-menubar.add_cascade(label='List', menu=list_menu)
-
-# add Exit menu item
-menubar.add_command(
-    label='Exit',
-    command=root.destroy
-)
-
-menubar.add_command(label='About',
-                    command=menu_about)
-
-root.config(menu=menubar)
+root = MainWindow()
 root.mainloop()
