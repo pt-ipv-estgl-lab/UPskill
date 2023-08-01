@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import Menu
 from tkinter import messagebox
+import gui_friends
 
 class MainWindow(tk.Tk):
     def __init__(self, window_width = 640, window_height = 480, *args, **kargs):
@@ -30,7 +31,7 @@ class MainWindow(tk.Tk):
 
         # add menu items to the management menu
         __management_menu.add_command(label='Products')
-        __management_menu.add_command(label='Friends')
+        __management_menu.add_command(label='Friends',command=self.manage_friends)
 
         # # management_menu.add_separator()
 
@@ -50,56 +51,18 @@ class MainWindow(tk.Tk):
         # add Exit menu item
         __menubar.add_command(
             label='Exit',
-            command=self.destroy
+            command=self.confirm_exit
         )
         self.config(menu=__menubar)
+       
+    def manage_friends(self):
+        messagebox.showinfo('Friends', 'This will be the friends management UI')
+        # friends = gui_friends.GUI_Friends(self)
+        # friends.create_main_container()
 
-    # def friend_window():
-    #     # Create secondary (or popup) window.
-    #     global center_x
-    #     global center_y
+    def confirm_exit(self):
+        if messagebox.askyesno('Are you sure', 'Quit App'):
+            self.destroy()
 
-    #     window = tk.Toplevel()
-    #     window.title('Friend')
-    #     window.geometry(f'300x200+{center_x}+{center_y}')
-    #     # configure the grid
-    #     window.columnconfigure(0, weight=1)
-    #     window.columnconfigure(1, weight=3)
-    #     # nickname
-    #     nickname_label = ttk.Label(window, text="Nickname:")
-    #     nickname_label.grid(column=0, row=0, sticky=tk.E, padx=5, pady=5)
-
-    #     nickname_entry = ttk.Entry(window)
-    #     nickname_entry.grid(column=1, row=0, sticky=tk.W, padx=5, pady=5)
-
-    #     # name
-    #     name_label = ttk.Label(window, text="Name:")
-    #     name_label.grid(column=0, row=1, sticky=tk.E, padx=5, pady=5)
-
-    #     name_entry = ttk.Entry(window)
-    #     name_entry.grid(column=1, row=1, sticky=tk.W, padx=5, pady=5)
-
-    #     # email
-    #     email_label = ttk.Label(window, text="Email:")
-    #     email_label.grid(column=0, row=2, sticky=tk.E, padx=5, pady=5)
-
-    #     email_entry = ttk.Entry(window)
-    #     email_entry.grid(column=1, row=2, sticky=tk.W, padx=5, pady=5)
-
-    #     # save button
-    #     save_button = ttk.Button(window, text="Save")
-    #     save_button.grid(column=0, row=3, sticky=tk.SW, padx=5, pady=5)
-
-    #     # cancel button
-    #     cancel_button = ttk.Button(window, text="Cancel", command=window.destroy)
-    #     cancel_button.grid(column=1, row=3, sticky=tk.SE, padx=5, pady=5)
-    #     window.focus()
-    #     window.grab_set() # Modal.
-
-
-    # def menu_about():
-    #     messagebox.showinfo('About', 'Demo on Upskill course')
-
-
-root = MainWindow()
+root = MainWindow(1024,768)
 root.mainloop()
