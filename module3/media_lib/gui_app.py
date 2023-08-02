@@ -2,12 +2,13 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import Menu
 from tkinter import messagebox
-import gui_friends
+from gui_friends import GUI_Friends
 
 class MainWindow(tk.Tk):
     def __init__(self, window_width = 640, window_height = 480, *args, **kargs):
         super().__init__(*args, **kargs)
         self.title("Media Lib App")
+        self.__handler = None
 
         # find the center point
         __screenwith = self.winfo_screenwidth()
@@ -30,8 +31,8 @@ class MainWindow(tk.Tk):
         __management_menu = Menu(__menubar, tearoff=0)
 
         # add menu items to the management menu
-        __management_menu.add_command(label='Products')
-        __management_menu.add_command(label='Friends',command=self.manage_friends)
+        __management_menu.add_command(label='Products', command=self.manage_products)
+        __management_menu.add_command(label='Friends', command=self.manage_friends)
 
         # # management_menu.add_separator()
 
@@ -54,11 +55,19 @@ class MainWindow(tk.Tk):
             command=self.confirm_exit
         )
         self.config(menu=__menubar)
-       
+
+    def manage_products(self):
+        if self.__handler != None:
+            self.__handler.destroy()
+            self.__handler = None
+            
+        messagebox.showinfo('Products', 'This will be the products management UI')
+
     def manage_friends(self):
-        messagebox.showinfo('Friends', 'This will be the friends management UI')
-        # friends = gui_friends.GUI_Friends(self)
-        # friends.create_main_container()
+        __manange_friends = GUI_Friends(self)
+        self.__handler = __manange_friends.create_main_container()
+
+        # messagebox.showinfo('Friends', 'This will be the friends management UI')
 
     def confirm_exit(self):
         if messagebox.askyesno('Are you sure', 'Quit App'):

@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
-from tkinter.messagebox import showinfo
+from tkinter.messagebox import showinfo, showerror
+from tkinter import simpledialog
+from friend import Friend, FriendError
 
 class GUI_Friends:
     def __init__(self, root_container) -> None:
@@ -14,18 +16,18 @@ class GUI_Friends:
         # define columns
         columns = ('nickname', 'name', 'email')
 
-        tree = ttk.Treeview(frame, columns=columns, show='headings')
+        self.__tree = ttk.Treeview(frame, columns=columns, show='headings')
 
         # define headings
-        tree.heading('nickname', text='Nickname')
-        tree.heading('name', text='Name')
-        tree.heading('email', text='Email')
+        self.__tree.heading('nickname', text='Nickname')
+        self.__tree.heading('name', text='Name')
+        self.__tree.heading('email', text='Email')
 
-        tree.grid(row=0, column=0, sticky='nsew')
+        self.__tree.grid(row=0, column=0, sticky='nsew')
 
         # add a scrollbar
-        scrollbar = ttk.Scrollbar(frame, orient=tk.VERTICAL, command=tree.yview)
-        tree.configure(yscroll=scrollbar.set)
+        scrollbar = ttk.Scrollbar(frame, orient=tk.VERTICAL, command=self.__tree.yview)
+        self.__tree.configure(yscroll=scrollbar.set)
         scrollbar.grid(row=0, column=1, sticky='ns')        
 
         return frame
@@ -53,57 +55,82 @@ class GUI_Friends:
         frame.columnconfigure(0, weight=4)
         frame.columnconfigure(1, weight=1)
 
-        __tree_frame = self.create_tree_frame(frame)
-        __tree_frame.grid(column=0, row=0)
+        tree_frame = self.create_tree_frame(frame)
+        tree_frame.grid(column=0, row=0)
 
-        __buttons_frame = self.create_buttons_frame(frame)
-        __buttons_frame.grid(column=1, row=0)
+        buttons_frame = self.create_buttons_frame(frame)
+        buttons_frame.grid(column=1, row=0)
 
-        frame.pack()
+        frame.grid(column=0, row=0)
         return frame
 
     def open_friend_window(self):
-        self.__friend_window = FriendWindow()
+        friend_window = FriendDialog(title='Friend', 
+                                            parent=self.__root)
+        if friend_window.friend != None:
+            result = (friend_window.friend.get_nickname(), friend_window.friend.get_name(), 
+                      friend_window.friend.get_email())
+            showinfo("Result", str(result))
+            self.__tree.insert('',
+                               tk.END,
+                               values=result)
 
-class FriendWindow(tk.Toplevel):
-    def __init__(self, center_x=120,center_y=100, *args, **kargs):
-        super().__init__(*args, **kargs)
-        # Create secondary (or popup) window.
-        self.title('Friend')
-        self.geometry(f'300x200+{center_x}+{center_y}')
+
+class FriendDialog(tk.simpledialog.Dialog):
+    def __init__(self, parent, title): 
+        self.friend = None
+        super().__init__(parent, title)
+
+    def body(self, frame):
+        container = ttk.Frame(frame)
         # configure the grid
-        self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=3)
+        container.columnconfigure(0, weight=1)
+        container.columnconfigure(1, weight=3)
         # nickname
-        nickname_label = ttk.Label(self, text="Nickname:")
+        nickname_label = ttk.Label(container, text="Nickname:")
         nickname_label.grid(column=0, row=0, sticky=tk.E, padx=5, pady=5)
 
-        nickname_entry = ttk.Entry(self)
-        nickname_entry.grid(column=1, row=0, sticky=tk.W, padx=5, pady=5)
+        self.__nickname_entry = ttk.Entry(container)
+        self.__nickname_entry.grid(column=1, row=0, sticky=tk.W, padx=5, pady=5)
 
         # name
-        name_label = ttk.Label(self, text="Name:")
+        name_label = ttk.Label(container, text="Name:")
         name_label.grid(column=0, row=1, sticky=tk.E, padx=5, pady=5)
 
-        name_entry = ttk.Entry(self)
-        name_entry.grid(column=1, row=1, sticky=tk.W, padx=5, pady=5)
+        self.__name_entry = ttk.Entry(container)
+        self.__name_entry.grid(column=1, row=1, sticky=tk.W, padx=5, pady=5)
 
         # email
-        email_label = ttk.Label(self, text="Email:")
+        email_label = ttk.Label(container, text="Email:")
         email_label.grid(column=0, row=2, sticky=tk.E, padx=5, pady=5)
 
-        email_entry = ttk.Entry(self)
-        email_entry.grid(column=1, row=2, sticky=tk.W, padx=5, pady=5)
+        self.__email_entry = ttk.Entry(container)
+        self.__email_entry.grid(column=1, row=2, sticky=tk.W, padx=5, pady=5)
+        container.pack()
+        self.__nickname_entry.focus_force()
+        self.bind('<Return>', lambda event: self.save_click())
+        self.bind('<Escape>', lambda event: self.destroy())
+        return frame
+    
+    def save_click(self):
+        try:
+            self.friend = Friend(self.__nickname_entry.get(),
+                             self.__name_entry.get(),
+                             self.__email_entry.get())
+            self.destroy()
+        except FriendError as e:
+            showerror('Friend Creator Error', str(e))
+        
 
+    def buttonbox(self):        
         # save button
-        save_button = ttk.Button(self, text="Save")
-        save_button.grid(column=0, row=3, sticky=tk.SW, padx=5, pady=5)
+        self.save_button = ttk.Button(self, text="Save", command=self.save_click)
+        self.save_button.pack(side='left', padx=5, pady=5)
 
         # cancel button
-        cancel_button = ttk.Button(self, text="Cancel", command=self.destroy)
-        cancel_button.grid(column=1, row=3, sticky=tk.SE, padx=5, pady=5)
-        self.focus()
-        self.grab_set() # Modal.
+        self.cancel_button = ttk.Button(self, text="Cancel", command=self.destroy)
+        self.cancel_button.pack(side='right', padx=5, pady=5)
+
 
 if __name__ == '__main__': # for testing propose
     root = tk.Tk()
